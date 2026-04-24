@@ -1,0 +1,22 @@
+name: brew-test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  audit-and-test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: brew update
+        run: brew update
+      - name: brew style Formula
+        run: brew style Formula/
+      - name: brew audit (strict, online)
+        run: brew audit --strict --online Formula/cfctx.rb
+      - name: brew install from local formula (build from source)
+        run: brew install --verbose --build-from-source Formula/cfctx.rb
+      - name: brew test (sources cfctx.sh and runs cfctx version)
+        run: brew test cfctx
