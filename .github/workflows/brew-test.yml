@@ -26,5 +26,8 @@ jobs:
       - name: brew install (build from source)
         run: brew install --verbose --build-from-source nkuhn-vmw/tap/cfctx
 
+      - name: Install test-only deps (bash, for `brew test`)
+        run: brew install bash
+
       - name: brew test (sources cfctx.sh + runs cfctx version)
         run: brew test nkuhn-vmw/tap/cfctx
