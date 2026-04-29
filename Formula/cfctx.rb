@@ -10,6 +10,7 @@ class Cfctx < Formula
 
   def install
     libexec.install "cfctx.sh"
+    bin.install "bin/cfctx-env"
     bash_completion.install "completions/cfctx.bash" => "cfctx"
     zsh_completion.install  "completions/cfctx.zsh"  => "_cfctx"
     pkgshare.install "examples", "docs"
@@ -44,5 +45,9 @@ class Cfctx < Formula
     # Source the function into a subshell and verify it responds.
     output = shell_output("#{Formula["bash"].opt_bin}/bash -c 'source #{opt_libexec}/cfctx.sh && cfctx version'")
     assert_match "cfctx #{version}", output
+
+    # Standalone helper for non-interactive shells (CI, Claude Code, scripts).
+    output = shell_output("#{bin}/cfctx-env --help")
+    assert_match "emit shell export lines", output
   end
 end
