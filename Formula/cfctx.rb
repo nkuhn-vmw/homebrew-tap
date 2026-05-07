@@ -1,8 +1,8 @@
 class Cfctx < Formula
   desc "Per-shell CF/Tanzu context switcher (kubectx for CF/Ops Manager/BOSH/CredHub)"
   homepage "https://github.com/nkuhn-vmw/cfctx"
-  url "https://github.com/nkuhn-vmw/cfctx/archive/refs/tags/v0.3.2.tar.gz"
-  sha256 "813044260ddafe9fe659a02a0c679d5d51e7d77aba58dfc64c6964be0019d554"
+  url "https://github.com/nkuhn-vmw/cfctx/archive/refs/tags/v0.4.0.tar.gz"
+  sha256 "650b593046a9c81805a4c68f40030ec486eddaba0d4ae1c45ed496455a724731"
   license "Apache-2.0"
   head "https://github.com/nkuhn-vmw/cfctx.git", branch: "main"
 
