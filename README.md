@@ -14,6 +14,7 @@ brew install cfctx
 | Formula | Description |
 |---|---|
 | [`cfctx`](Formula/cfctx.rb) | Per-shell Cloud Foundry / Tanzu context switcher ([repo](https://github.com/nkuhn-vmw/cfctx)) |
+| [`opencode-tanzu`](Formula/opencode-tanzu.rb) | [opencode](https://opencode.ai) provider plugin for Tanzu Platform GenAI ([repo](https://github.com/nkuhn-vmw/opencode-tanzu)) — after `brew install`, run `opencode-tanzu-install` to copy the plugin into `~/.config/opencode/plugins` |
 
 ## Updating a formula
 
