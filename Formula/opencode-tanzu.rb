@@ -43,7 +43,10 @@ class OpencodeTanzu < Formula
 
   test do
     assert_path_exists libexec/"opencode-tanzu.js"
-    system "node", "--input-type=module", "-e",
-           "await import('#{libexec}/opencode-tanzu.js')"
+    # The plugin runs inside opencode's own runtime, not system node, so node is
+    # not a dependency. Use it only as an opportunistic syntax/import smoke check
+    # when it happens to be available (it may not be in brew's test sandbox).
+    node = which("node")
+    system node, "--input-type=module", "-e", "await import('#{libexec}/opencode-tanzu.js')" if node
   end
 end

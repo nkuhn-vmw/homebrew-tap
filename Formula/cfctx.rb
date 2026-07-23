@@ -43,7 +43,7 @@ class Cfctx < Formula
 
   test do
     # Source the function into a subshell and verify it responds.
-    output = shell_output("#{Formula["bash"].opt_bin}/bash -c 'source #{opt_libexec}/cfctx.sh && cfctx version'")
+    output = shell_output("#{formula_opt_bin("bash")}/bash -c 'source #{opt_libexec}/cfctx.sh && cfctx version'")
     assert_match "cfctx #{version}", output
 
     # Standalone helper for non-interactive shells (CI, Claude Code, scripts).
