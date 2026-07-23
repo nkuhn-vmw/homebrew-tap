@@ -8,6 +8,10 @@ on:
 jobs:
   audit-and-test:
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        formula: [cfctx, opencode-tanzu]
     steps:
       - uses: actions/checkout@v4
 
@@ -18,16 +22,16 @@ jobs:
         run: brew tap nkuhn-vmw/tap "$GITHUB_WORKSPACE"
 
       - name: brew style
-        run: brew style nkuhn-vmw/tap/cfctx
+        run: brew style "nkuhn-vmw/tap/${{ matrix.formula }}"
 
       - name: brew audit (strict + online)
-        run: brew audit --strict --online nkuhn-vmw/tap/cfctx
+        run: brew audit --strict --online "nkuhn-vmw/tap/${{ matrix.formula }}"
 
-      - name: brew install (build from source)
-        run: brew install --verbose --build-from-source nkuhn-vmw/tap/cfctx
-
-      - name: Install test-only deps (bash, for `brew test`)
+      - name: Install test-only deps (bash, for cfctx's `brew test`)
         run: brew install bash
 
-      - name: brew test (sources cfctx.sh + runs cfctx version)
-        run: brew test nkuhn-vmw/tap/cfctx
+      - name: brew install (build from source)
+        run: brew install --verbose --build-from-source "nkuhn-vmw/tap/${{ matrix.formula }}"
+
+      - name: brew test
+        run: brew test "nkuhn-vmw/tap/${{ matrix.formula }}"
