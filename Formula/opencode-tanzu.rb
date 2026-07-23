@@ -1,8 +1,8 @@
 class OpencodeTanzu < Formula
   desc "Opencode provider plugin for Tanzu Platform GenAI (community, unsupported)"
   homepage "https://github.com/nkuhn-vmw/opencode-tanzu"
-  url "https://github.com/nkuhn-vmw/opencode-tanzu/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "481b2f89b7a6f8696d9edda6a8acf45e3ba24523a2e10d2c01202def3a3068a6"
+  url "https://github.com/nkuhn-vmw/opencode-tanzu/archive/refs/tags/v0.1.1.tar.gz"
+  sha256 "8b827b597f6ec40952f89f61137a89ebb3a8c7aca6204c3ae1d1129602b9b231"
   license "Apache-2.0"
 
   def install
