@@ -3,8 +3,8 @@ class Klbench < Formula
 
   desc "Kuhn Labs LLM benchmark — real-usability benchmarks against any endpoint"
   homepage "https://github.com/nkuhn-vmw/klbench"
-  # Until the first PyPI release, install from the repo tag. On release,
-  # switch url/sha256 to the PyPI sdist and run `brew audit --new klbench`.
+  # Git-tag pinned BY DESIGN — no PyPI in the chain (2026-07-31 decision:
+  # installs come only from sources we control end-to-end).
   url "https://github.com/nkuhn-vmw/klbench.git", tag: "v1.0.0"
   version "1.0.0"
   license "Apache-2.0"
