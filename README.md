@@ -44,7 +44,11 @@ The token file contains the raw service-key API key and should be mode 0600
 inside a private directory. V2 reads it again for each request, supporting
 rotation. Its wrapper isolates config/data/cache/state from V1; see the
 [full guide](https://github.com/nkuhn-vmw/opencode-tanzu/blob/main/docs/opencode-v2.md)
-for XDG overrides, source/project installs and tested runtime versions.
+for XDG overrides, source/project installs, private CA configuration, model
+selection, verification and troubleshooting. The [v0.3.0 release](https://github.com/nkuhn-vmw/opencode-tanzu/releases/tag/v0.3.0)
+records the tested stable and beta runtime versions. See the
+[validation record](https://github.com/nkuhn-vmw/opencode-tanzu/blob/main/docs/validation-standalone-v2.md)
+for the live inference timeout and browser validation limitations.
 The Homebrew formula stages files only; activation runs as your user and uses
 the same installer as the source repository. No CF buildpack is needed.
 
