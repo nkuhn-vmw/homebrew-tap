@@ -1,52 +1,54 @@
 class OpencodeTanzu < Formula
   desc "Opencode provider plugin for Tanzu Platform GenAI (community, unsupported)"
   homepage "https://github.com/nkuhn-vmw/opencode-tanzu"
-  url "https://github.com/nkuhn-vmw/opencode-tanzu/archive/refs/tags/v0.2.4.tar.gz"
-  sha256 "e4df12c0eeb7d235e6b308878f6f0120b0b2d38f945311c18c95136e07413f83"
+  url "https://github.com/nkuhn-vmw/opencode-tanzu/archive/e209517024f24a52524063ea035019c734d4dbc3.tar.gz"
+  version "0.3.0"
+  sha256 "689954fd4ffb58cb5e2d47b76e5add8a60419c60ea4562c53699a590bdecc754"
   license "Apache-2.0"
 
   def install
-    libexec.install Dir["src/*.js"]
-
-    # Homebrew must not write into $HOME, so the copy into opencode's plugin
-    # directory is a user-run step. opencode loads plugin files flat — no
-    # subdirectories — hence the plain file copy.
+    libexec.install "src", "bin", "install.sh"
     (bin/"opencode-tanzu-install").write <<~EOS
       #!/bin/bash
-      set -euo pipefail
-      target="${XDG_CONFIG_HOME:-$HOME/.config}/opencode/plugins"
-      if [ "${1:-}" = "--uninstall" ]; then
-        rm -f "$target"/opencode-tanzu*.js
-        echo "Removed opencode-tanzu from $target"
-        exit 0
-      fi
-      mkdir -p "$target"
-      cp "#{libexec}"/*.js "$target"/
-      echo "Installed opencode-tanzu #{version} into $target"
-      echo "Next: opencode providers login -p tanzu"
+      exec "#{libexec}/install.sh" "$@"
+    EOS
+    (bin/"opencode-tanzu-v2").write <<~EOS
+      #!/bin/bash
+      exec "#{libexec}/bin/opencode-tanzu-v2" "$@"
     EOS
   end
 
   def caveats
     <<~EOS
-      The plugin is staged in #{libexec}. To activate it, copy it into
-      opencode's plugin directory (~/.config/opencode/plugins):
+      Install OpenCode separately, then activate the matching provider:
 
-        opencode-tanzu-install
+        opencode-tanzu-install --runtime v1
+        opencode-tanzu-install --runtime v2
 
-      After `brew upgrade opencode-tanzu`, run it again to pick up the new
-      version. Remove with:
+      V1: opencode providers login -p tanzu
+      V2: set TANZU_GENAI_BASE_URL and TANZU_GENAI_API_KEY_FILE, then run
+          opencode-tanzu-v2
 
-        opencode-tanzu-install --uninstall
+      The V2 wrapper isolates config and state from V1. It expects opencode2
+      on PATH; set OPENCODE_V2_BIN if your V2 executable has another name.
+      After upgrades, rerun the installer for each runtime you use.
+      Remove a runtime's plugin with --runtime v1|v2 --uninstall.
+      Credentials and sessions are retained.
+
+      Guide: https://github.com/nkuhn-vmw/opencode-tanzu/blob/main/docs/opencode-v2.md
     EOS
   end
 
   test do
-    assert_path_exists libexec/"opencode-tanzu.js"
+    assert_path_exists libexec/"src/opencode-tanzu.js"
+    system bin/"opencode-tanzu-install", "--runtime", "v2"
+    assert_path_exists testpath/".config/opencode-tanzu-v2/opencode/plugins/opencode-tanzu-v2/index.js"
+    system bin/"opencode-tanzu-install", "--runtime", "v2", "--uninstall"
+    refute_path_exists testpath/".config/opencode-tanzu-v2/opencode/plugins/opencode-tanzu-v2/index.js"
     # The plugin runs inside opencode's own runtime, not system node, so node is
     # not a dependency. Use it only as an opportunistic syntax/import smoke check
     # when it happens to be available (it may not be in brew's test sandbox).
     node = which("node")
-    system node, "--input-type=module", "-e", "await import('#{libexec}/opencode-tanzu.js')" if node
+    system node, "--input-type=module", "-e", "await import('#{libexec}/src/opencode-tanzu.js')" if node
   end
 end
