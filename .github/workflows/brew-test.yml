@@ -19,7 +19,7 @@ jobs:
         run: brew update
 
       - name: Trust the repository under test on this disposable runner
-        run: brew trust --tap nkuhn-vmw/tap
+        run: brew trust --tap "$GITHUB_WORKSPACE"
 
       - name: Tap this repo locally as nkuhn-vmw/tap
         run: brew tap nkuhn-vmw/tap "$GITHUB_WORKSPACE"
