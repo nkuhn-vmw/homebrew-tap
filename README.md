@@ -9,6 +9,10 @@ brew tap nkuhn-vmw/tap
 brew install cfctx
 ```
 
+Current Homebrew versions require explicit trust for community taps. If Homebrew
+reports an untrusted tap, review this repository, run `brew trust --tap
+nkuhn-vmw/tap`, and retry. This trusts formula code from this tap.
+
 ## Formulas
 
 | Formula | Description |
