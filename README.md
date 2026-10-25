@@ -19,6 +19,7 @@ nkuhn-vmw/tap`, and retry. This trusts formula code from this tap.
 |---|---|
 | [`cfctx`](Formula/cfctx.rb) | Per-shell Cloud Foundry / Tanzu context switcher ([repo](https://github.com/nkuhn-vmw/cfctx)) |
 | [`opencode-tanzu`](Formula/opencode-tanzu.rb) | [opencode](https://opencode.ai) provider plugin for Tanzu Platform GenAI ([repo](https://github.com/nkuhn-vmw/opencode-tanzu)) — V1 and native V2/beta adapters; activate the matching runtime as described below |
+| [`ws`](Formula/ws.rb) | KL AgentFS client: syncs agent memory, instructions and skills with a KL AgentFS instance ([repo](https://github.com/nkuhn-vmw/agent-workspace)). After install: `klportal workspace agentfs key \| ws connect --key -` then `ws sync` ([guide](https://github.com/nkuhn-vmw/agent-workspace/blob/main/docs/connect.md)) |
 | [`klbench`](Formula/klbench.rb) | Kuhn Labs LLM benchmark suite ([repo](https://github.com/nkuhn-vmw/klbench)) — activates at the v1.0.0 tag; pins to the PyPI sdist once published |
 
 ## Tanzu provider: OpenCode V1 and V2 / beta
