@@ -103,8 +103,8 @@ project instead of global configuration.
 ## Updating a formula
 
 For `ws`, first publish the unchanged release binaries to the private Harbor
-project using the source repository's distribution workflow, then update all
-four blob digests and SHA-256 pins together. Keep the version tag immutable and
+project using the maintainer publishing script from the internal network, then
+update all four blob digests and SHA-256 pins together. Keep the version tag immutable and
 retained in Harbor. There is no public fallback or automatic livecheck for `ws`.
 
 Most formula updates happen automatically via the auto-bump GitHub Action in
