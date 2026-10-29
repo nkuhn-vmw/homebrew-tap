@@ -5,24 +5,27 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   audit-and-test:
     runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
-        formula: [cfctx, opencode-tanzu, ws]
+        formula: [cfctx, opencode-tanzu]
     steps:
       - uses: actions/checkout@v4
 
       - name: brew update
         run: brew update
 
-      - name: Trust the repository under test on this disposable runner
-        run: brew trust --tap "$GITHUB_WORKSPACE"
-
       - name: Tap this repo locally as nkuhn-vmw/tap
         run: brew tap nkuhn-vmw/tap "$GITHUB_WORKSPACE"
+
+      - name: Trust the repository under test on this disposable runner
+        run: brew trust --tap nkuhn-vmw/tap
 
       - name: brew style
         run: brew style "nkuhn-vmw/tap/${{ matrix.formula }}"
@@ -38,3 +41,21 @@ jobs:
 
       - name: brew test
         run: brew test "nkuhn-vmw/tap/${{ matrix.formula }}"
+
+  ws-public-checks:
+    name: ws formula checks (no private credentials)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew update
+      - run: brew tap nkuhn-vmw/tap "$GITHUB_WORKSPACE"
+      - run: brew trust --tap nkuhn-vmw/tap
+      - run: brew style nkuhn-vmw/tap/ws
+      - run: brew readall nkuhn-vmw/tap
+      - name: Formula metadata without private credentials
+        run: brew info --json=v2 nkuhn-vmw/tap/ws > "$RUNNER_TEMP/ws-info.json"
+      - run: python3 tests/test_ws_distribution.py
+      - run: bash -n cmd/brew-ws-install
+      # The private agent-workspace workflow runs the real Harbor fetch,
+      # install and brew test against a reviewed immutable tap commit.
+      # Never expose its registry credentials or binaries to public PR jobs.

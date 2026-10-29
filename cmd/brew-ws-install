@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Install ws using a short-lived Harbor pull token. Never save the CLI secret.
+set -euo pipefail
+
+action="${1:-install}"
+case "$action" in
+  install | upgrade | reinstall) ;;
+  *) echo 'Usage: brew ws-install [install|upgrade|reinstall]' >&2; exit 2 ;;
+esac
+if [[ $# -gt 1 ]]; then
+  echo 'Usage: brew ws-install [install|upgrade|reinstall]' >&2
+  exit 2
+fi
+registry="${HOMEBREW_WS_REGISTRY:-}"
+if [[ ! "$registry" =~ ^[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?(:[0-9]{1,5})?$ ]]; then
+  echo 'Set HOMEBREW_WS_REGISTRY to the trusted Harbor hostname supplied by your administrator (no scheme or path).' >&2
+  exit 2
+fi
+if ! command -v jq >/dev/null; then
+  echo 'Install the JSON parser first: brew install jq' >&2
+  exit 2
+fi
+user="${HOMEBREW_WS_USER:-}"
+if [[ -z "$user" ]]; then
+  read -r -p "Harbor username for ${registry}: " user
+fi
+if [[ -z "$user" || "$user" == *:* || "$user" == *$'\n'* || "$user" == *$'\r'* ]]; then
+  echo 'Enter a Harbor username without a colon or newline.' >&2
+  exit 2
+fi
+echo "At curl's password prompt, paste your Harbor CLI secret (not your SSO password)." >&2
+# curl reads the secret from the terminal; it never appears in argv, a file,
+# a shell variable or history. Do not follow redirects with these credentials.
+token="$(curl --fail --silent --show-error --proto '=https' --max-time 30 \
+  --user "$user" \
+  "https://${registry}/service/token?service=harbor-registry&scope=repository:ws/client:pull" |
+  jq -er '(.token // .access_token) | select(type == "string" and length > 0)')"
+HOMEBREW_WS_TOKEN="$token" brew "$action" nkuhn-vmw/tap/ws
