@@ -1,5 +1,5 @@
 class Ws < Formula
-  desc "KL AgentFS client: sync agent memory, instructions and skills with S3"
+  desc "Private agent-state backup engine for Cloud Foundry agent buildpacks"
   homepage "https://github.com/nkuhn-vmw/homebrew-tap#private-ws-installs"
   version "0.18.0"
   license "Apache-2.0"
@@ -54,12 +54,11 @@ class Ws < Formula
 
   def caveats
     <<~EOS
-      Connect this machine to your portal workspace's KL AgentFS instance:
+      KL AgentFS was retired on 2026-11-18, so ws connect and ws sync have
+      nothing left to connect to; the next release removes them. On a
+      workstation ws is an operator tool for the private-state backup
+      (for example ws restore --state).
 
-        klportal workspace agentfs key | ws connect --key -
-        ws sync
-
-      The key is stored in ~/.config/ws/connection.json (mode 0600).
       Installs/upgrades require Harbor pull access: brew ws-install upgrade
       Guide: https://github.com/nkuhn-vmw/homebrew-tap#private-ws-installs
     EOS
@@ -67,15 +66,5 @@ class Ws < Formula
 
   test do
     assert_match "ws #{version}", shell_output("#{bin}/ws version")
-    # ws connect never echoes the secret and writes a private connection file.
-    key = <<~JSON
-      {"endpoint_url":"https://s3.example.com","bucket":"agentfs","instance_prefix":"g/","prefix":"g/",
-       "access_key_id":"AKTEST","secret_access_key":"brew-test-secret"}
-    JSON
-    out = pipe_output("#{bin}/ws connect --key - --dir #{testpath}/fs", key)
-    refute_match "brew-test-secret", out
-    assert_match "the whole instance", out
-    conn = testpath/".config/ws/connection.json"
-    assert_equal "600", format("%o", conn.stat.mode & 0777)
   end
 end

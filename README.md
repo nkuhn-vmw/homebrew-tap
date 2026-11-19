@@ -19,7 +19,7 @@ nkuhn-vmw/tap`, and retry. This trusts formula code from this tap.
 |---|---|
 | [`cfctx`](Formula/cfctx.rb) | Per-shell Cloud Foundry / Tanzu context switcher ([repo](https://github.com/nkuhn-vmw/cfctx)) |
 | [`opencode-tanzu`](Formula/opencode-tanzu.rb) | [opencode](https://opencode.ai) provider plugin for Tanzu Platform GenAI ([repo](https://github.com/nkuhn-vmw/opencode-tanzu)) — V1 and native V2/beta adapters; activate the matching runtime as described below |
-| [`ws`](Formula/ws.rb) | KL AgentFS client. Requires internal Harbor pull access; see [private installs](#private-ws-installs). Source and releases remain private. |
+| [`ws`](Formula/ws.rb) | Private agent-state backup engine used by the Cloud Foundry agent buildpacks (KL AgentFS, and with it `ws connect`/`ws sync`, was retired 2026-11-18). Requires internal Harbor pull access; see [private installs](#private-ws-installs). Source and releases remain private. |
 | [`klbench`](Formula/klbench.rb) | Kuhn Labs LLM benchmark suite ([repo](https://github.com/nkuhn-vmw/klbench)) — activates at the v1.0.0 tag; pins to the PyPI sdist once published |
 
 ## Private ws installs
@@ -36,8 +36,6 @@ brew install jq
 export HOMEBREW_WS_REGISTRY='harbor.example.com' # replace with the supplied hostname
 brew ws-install
 ws version
-klportal workspace agentfs key | ws connect --key -
-ws sync
 ```
 
 Sign in to Harbor with SSO first. In **User Profile**, copy your **CLI secret**.
